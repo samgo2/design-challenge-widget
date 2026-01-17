@@ -7,29 +7,32 @@
 
 <style>
 :root{
-  --bg:#0f1115;
-  --card:#161a22;
-  --border:#232836;
   --text:#f2f2f7;
   --muted:#9aa0aa;
   --accent:#7c7cff;
 }
+
 *{box-sizing:border-box}
-body{
+
+html, body{
   margin:0;
-  background:var(--bg);
+  padding:0;
+  background:transparent;
+  overflow:hidden;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+}
+
+body{
   display:flex;
   justify-content:center;
-  padding:10px;
 }
+
 .widget{
   width:330px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
+  background:transparent;
+  padding:12px;
 }
+
 .day{
   font-size:11px;
   font-weight:700;
@@ -37,35 +40,43 @@ body{
   color:var(--accent);
   text-transform:uppercase;
 }
+
 .task{
   font-size:15px;
   font-weight:600;
   color:var(--text);
   margin-top:4px;
 }
+
 .details{
   display:none;
   margin-top:12px;
 }
-.section{margin-bottom:10px}
+
+.section{
+  margin-bottom:10px;
+}
+
 .label{
   font-size:10px;
   text-transform:uppercase;
   letter-spacing:.05em;
   color:var(--muted);
   font-weight:600;
-  margin-bottom:2px;
 }
+
 .value{
   font-size:13px;
   color:var(--text);
   line-height:1.45;
 }
+
 .actions{
   display:flex;
   gap:6px;
   margin:10px 0;
 }
+
 button{
   flex:1;
   padding:8px;
@@ -73,26 +84,29 @@ button{
   font-weight:600;
   border-radius:9px;
   cursor:pointer;
-  border:1px solid var(--border);
-  background:transparent;
+  background:rgba(255,255,255,0.08);
   color:var(--text);
+  border:none;
 }
+
 .primary{
   background:var(--accent);
-  border:none;
   color:#fff;
 }
+
 .full-width{
   width:100%;
   display:block;
 }
+
 .progress-wrap{
   height:5px;
-  background:var(--border);
+  background:rgba(255,255,255,0.15);
   border-radius:999px;
   overflow:hidden;
   margin-bottom:10px;
 }
+
 .progress{
   height:100%;
   width:0%;
