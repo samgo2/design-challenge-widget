@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>30-Day Graphic Design Challenge</title>
+
+<style>
+:root{
+  --bg:#0f1115;
+  --card:#161a22;
+  --border:#232836;
+  --text:#f2f2f7;
+  --muted:#9aa0aa;
+  --accent:#7c7cff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  display:flex;
+  justify-content:center;
+  padding:10px;
+}
+.widget{
+  width:330px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+}
+.day{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.05em;
+  color:var(--accent);
+  text-transform:uppercase;
+}
+.task{
+  font-size:15px;
+  font-weight:600;
+  color:var(--text);
+  margin-top:4px;
+}
+.details{
+  display:none;
+  margin-top:12px;
+}
+.section{margin-bottom:10px}
+.label{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color:var(--muted);
+  font-weight:600;
+  margin-bottom:2px;
+}
+.value{
+  font-size:13px;
+  color:var(--text);
+  line-height:1.45;
+}
+.actions{
+  display:flex;
+  gap:6px;
+  margin:10px 0;
+}
+button{
+  flex:1;
+  padding:8px;
+  font-size:11px;
+  font-weight:600;
+  border-radius:9px;
+  cursor:pointer;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+}
+.primary{
+  background:var(--accent);
+  border:none;
+  color:#fff;
+}
+.full-width{
+  width:100%;
+  display:block;
+}
+.progress-wrap{
+  height:5px;
+  background:var(--border);
+  border-radius:999px;
+  overflow:hidden;
+  margin-bottom:10px;
+}
+.progress{
+  height:100%;
+  width:0%;
+  background:var(--accent);
+  transition:width .25s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="widget">
+  <div class="day" id="day"></div>
+  <div class="task" id="task"></div>
+
+  <div class="details" id="details">
+    <div class="section">
+      <div class="label">Brief</div>
+      <div class="value" id="brief"></div>
+    </div>
+    <div class="section">
+      <div class="label">Focus</div>
+      <div class="value" id="focus"></div>
+    </div>
+    <div class="section">
+      <div class="label">Constraint</div>
+      <div class="value" id="constraint"></div>
+    </div>
+    <div class="section">
+      <div class="label">Deliverable</div>
+      <div class="value" id="deliverable"></div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="backBtn">← Back</button>
+    <button id="toggleBtn">Show details</button>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <button class="primary full-width" id="nextBtn">Done → Next</button>
+</div>
+
+<script>
+const challenges = [
+{title:"Sports Icon Poster",brief:"Create a poster of a famous athlete (e.g., Lionel Messi, LeBron James, Hidilyn Diaz).",focus:"Strong composition + action pose",constraint:"Use only 2 colors + black",deliverable:"Portrait poster (A3)"},
+{title:"Movie Quote Poster",brief:"Design a poster featuring a famous movie quote (e.g., “Why so serious?” – The Dark Knight).",focus:"Typography hierarchy",constraint:"No images allowed",deliverable:"Poster (A3)"},
+{title:"Song Lyric Visual",brief:"Create a poster based on a powerful song lyric.",focus:"Mood & emotion",constraint:"One font family only",deliverable:"Poster (A3)"},
+{title:"Film Poster Redesign",brief:"Redesign an existing movie poster with a fresh concept.",focus:"Conceptual thinking",constraint:"Completely new layout",deliverable:"Poster (A3)"},
+{title:"Sports Event Promo",brief:"Design a promotional poster for a major sports event.",focus:"Visual hierarchy",constraint:"Square format",deliverable:"Social media poster"},
+{title:"Concert Poster",brief:"Create a concert poster for a real music artist.",focus:"Color harmony",constraint:"Photo manipulation required",deliverable:"Poster (A3)"},
+{title:"Minimal Character Poster",brief:"Design a minimal poster representing a movie character.",focus:"Symbolism",constraint:"Maximum of 5 shapes",deliverable:"Poster (A3)"},
+{title:"Motivational Sports Quote",brief:"Create a poster featuring an inspirational sports quote.",focus:"Typography layout",constraint:"Black & white only",deliverable:"Poster (A3)"},
+{title:"Album Cover Redesign",brief:"Redesign a famous album cover.",focus:"Storytelling",constraint:"Change the mood/genre",deliverable:"Album cover"},
+{title:"Film Festival Poster",brief:"Design a poster for an international film festival.",focus:"Typography-led design",constraint:"No photography",deliverable:"Poster (A2)"},
+{title:"Jersey Design Showcase",brief:"Create a visual showcasing a sports jersey design.",focus:"Patterns & texture",constraint:"Flat design style",deliverable:"Poster (A3)"},
+{title:"Emotional Lyric Poster",brief:"Design a poster expressing emotion through lyrics.",focus:"Color psychology",constraint:"Soft color palette",deliverable:"Poster (A3)"},
+{title:"Movie Scene Poster",brief:"Create a poster based on a memorable movie scene.",focus:"Composition",constraint:"No faces shown",deliverable:"Poster (A3)"},
+{title:"Athlete Profile Poster",brief:"Design an informational poster about an athlete.",focus:"Data hierarchy",constraint:"Grid-based layout",deliverable:"Poster (A3)"},
+{title:"Illustrated Movie Quote",brief:"Illustrate a quote from an animated movie.",focus:"Illustration balance",constraint:"Illustration required",deliverable:"Poster (A3)"},
+{title:"Sports Rivalry Poster",brief:"Design a poster showing a famous sports rivalry.",focus:"Contrast & tension",constraint:"Split composition",deliverable:"Poster (A3)"},
+{title:"Music Festival Poster",brief:"Create a poster for a music festival.",focus:"Atmosphere & scale",constraint:"Vertical format only",deliverable:"Poster (A2)"},
+{title:"Typography-Only Film Poster",brief:"Design a movie poster using typography only.",focus:"Expressive type",constraint:"No images allowed",deliverable:"Poster (A3)"},
+{title:"Athlete Legacy Poster",brief:"Create a poster celebrating an athlete’s legacy.",focus:"Storytelling",constraint:"Texture overlay required",deliverable:"Poster (A3)"},
+{title:"Surreal Lyric Poster",brief:"Visualize a song lyric using surreal imagery.",focus:"Photo blending",constraint:"Use exactly 2 images",deliverable:"Poster (A3)"},
+{title:"Genre Reimagined Poster",brief:"Redesign a movie poster in a different genre.",focus:"Visual language",constraint:"Change color palette",deliverable:"Poster (A3)"},
+{title:"Sports Brand Advertisement",brief:"Create an ad poster for a sports brand.",focus:"Commercial clarity",constraint:"Include CTA",deliverable:"Poster (A3)"},
+{title:"Music Quote Typography",brief:"Design expressive typography for a music quote.",focus:"Type personality",constraint:"Alignment experimentation",deliverable:"Poster (A3)"},
+{title:"Symbol-Only Character Poster",brief:"Represent a character using symbols only.",focus:"Visual metaphor",constraint:"Title text only",deliverable:"Poster (A3)"},
+{title:"Action Freeze Poster",brief:"Design a sports poster capturing peak action.",focus:"Motion",constraint:"Motion blur required",deliverable:"Poster (A3)"},
+{title:"Duotone Movie Poster",brief:"Create a movie poster using duotone colors.",focus:"Contrast",constraint:"Two colors only",deliverable:"Poster (A3)"},
+{title:"Hand-Lettered Lyric",brief:"Create a lyric poster using hand lettering.",focus:"Letterform control",constraint:"No fonts allowed",deliverable:"Poster (A3)"},
+{title:"Sports Documentary Poster",brief:"Design a poster for a sports documentary.",focus:"Cinematic mood",constraint:"Dark tonal range",deliverable:"Poster (A3)"},
+{title:"Social Media Movie Poster",brief:"Adapt a movie poster for social media.",focus:"Responsiveness",constraint:"Square format",deliverable:"Instagram post"},
+{title:"Redesign Your Best Work",brief:"Redesign your favorite challenge from this month.",focus:"Refinement & polish",constraint:"Apply improvements",deliverable:"Final poster"}
+];
+
+let i = Number(localStorage.getItem("designDay")) || 0;
+const $ = id => document.getElementById(id);
+
+function render(){
+  const d = challenges[i];
+  $("day").textContent = `Day ${i+1}`;
+  $("task").textContent = d.title;
+  $("brief").textContent = d.brief;
+  $("focus").textContent = d.focus;
+  $("constraint").textContent = d.constraint;
+  $("deliverable").textContent = d.deliverable;
+  $("progress").style.width = `${(i/challenges.length)*100}%`;
+}
+
+$("toggleBtn").onclick = ()=>{
+  const open = $("details").style.display === "block";
+  $("details").style.display = open ? "none" : "block";
+  $("toggleBtn").textContent = open ? "Show details" : "Hide details";
+};
+
+$("nextBtn").onclick = ()=>{
+  if(i < challenges.length-1){
+    i++;
+    localStorage.setItem("designDay", i);
+    render();
+  }
+};
+
+$("backBtn").onclick = ()=>{
+  if(i > 0){
+    i--;
+    localStorage.setItem("designDay", i);
+    render();
+  }
+};
+
+render();
+</script>
+
+</body>
+</html>
