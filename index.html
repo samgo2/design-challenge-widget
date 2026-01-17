@@ -6,11 +6,12 @@
 
 <style>
 :root{
-  --card:#141824;
-  --border:rgba(255,255,255,0.08);
-  --text:#f2f2f7;
-  --muted:#9aa0aa;
-  --accent:#7c7cff;
+  --card:#2b2b2d;          /* main card */
+  --surface:#1f1f21;       /* inner surfaces */
+  --border:#3a3a3c;
+  --text:#ffffff;
+  --muted:#b3b3b7;
+  --accent:#5b8cff;
 }
 
 *{box-sizing:border-box}
@@ -18,7 +19,7 @@
 html, body{
   margin:0;
   padding:0;
-  background:transparent; /* 🔑 removes solid background */
+  background:transparent;
   overflow:hidden;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
 }
@@ -30,13 +31,14 @@ body{
 
 .widget{
   width:330px;
-  background:var(--card); /* solid card stays */
+  background:var(--card);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:18px;
   padding:14px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.45);
+  box-shadow:none; /* ❌ removed shadow */
 }
 
+/* Header */
 .day{
   font-size:11px;
   font-weight:700;
@@ -46,12 +48,13 @@ body{
 }
 
 .task{
-  font-size:15px;
-  font-weight:600;
+  font-size:16px;
+  font-weight:700;
   color:var(--text);
   margin-top:4px;
 }
 
+/* Buttons */
 .actions{
   display:flex;
   gap:8px;
@@ -60,18 +63,18 @@ body{
 
 button{
   flex:1;
-  padding:8px;
+  padding:9px;
   font-size:11px;
   font-weight:600;
-  border-radius:10px;
+  border-radius:12px;
   cursor:pointer;
-  background:#0f1320;
+  background:var(--surface);
   color:var(--text);
   border:1px solid var(--border);
 }
 
 button:hover{
-  background:#151a2d;
+  background:#262628;
 }
 
 .primary{
@@ -84,9 +87,10 @@ button:hover{
   width:100%;
 }
 
+/* Progress bar */
 .progress-wrap{
-  height:5px;
-  background:#0f1320;
+  height:6px;
+  background:var(--surface);
   border-radius:999px;
   overflow:hidden;
   margin:10px 0;
@@ -98,12 +102,18 @@ button:hover{
   background:var(--accent);
 }
 
+/* Details */
 .details{
   display:none;
   margin-top:12px;
 }
 
-.section{margin-bottom:10px}
+.section{
+  margin-bottom:10px;
+  padding:8px;
+  border-radius:12px;
+  background:var(--surface);
+}
 
 .label{
   font-size:10px;
@@ -111,6 +121,7 @@ button:hover{
   letter-spacing:.05em;
   color:var(--muted);
   font-weight:600;
+  margin-bottom:2px;
 }
 
 .value{
