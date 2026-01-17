@@ -6,8 +6,8 @@
 
 <style>
 :root{
-  --card:#2b2b2d;          /* main card */
-  --surface:#1f1f21;       /* inner surfaces */
+  --card:#2b2b2d;
+  --surface:#1f1f21;
   --border:#3a3a3c;
   --text:#ffffff;
   --muted:#b3b3b7;
@@ -35,7 +35,6 @@ body{
   border:1px solid var(--border);
   border-radius:18px;
   padding:14px;
-  box-shadow:none; /* ❌ removed shadow */
 }
 
 /* Header */
@@ -73,9 +72,7 @@ button{
   border:1px solid var(--border);
 }
 
-button:hover{
-  background:#262628;
-}
+button:hover{background:#262628}
 
 .primary{
   background:var(--accent);
@@ -83,11 +80,9 @@ button:hover{
   border:none;
 }
 
-.full{
-  width:100%;
-}
+.full{width:100%}
 
-/* Progress bar */
+/* Progress */
 .progress-wrap{
   height:6px;
   background:var(--surface);
@@ -98,7 +93,7 @@ button:hover{
 
 .progress{
   height:100%;
-  width:3.3%;
+  width:0%;
   background:var(--accent);
 }
 
@@ -109,7 +104,7 @@ button:hover{
 }
 
 .section{
-  margin-bottom:10px;
+  margin-bottom:8px;
   padding:8px;
   border-radius:12px;
   background:var(--surface);
@@ -121,7 +116,6 @@ button:hover{
   letter-spacing:.05em;
   color:var(--muted);
   font-weight:600;
-  margin-bottom:2px;
 }
 
 .value{
@@ -135,12 +129,12 @@ button:hover{
 <body>
 
 <div class="widget">
-  <div class="day">DAY 1</div>
-  <div class="task">Sports Icon Poster</div>
+  <div class="day"></div>
+  <div class="task"></div>
 
   <div class="actions">
-    <button>← Back</button>
-    <button onclick="toggleDetails()">Show details</button>
+    <button id="backBtn">← Back</button>
+    <button id="detailsBtn">Show details</button>
   </div>
 
   <div class="progress-wrap">
@@ -150,35 +144,112 @@ button:hover{
   <div class="details" id="details">
     <div class="section">
       <div class="label">Brief</div>
-      <div class="value">
-        Create a poster of a famous athlete (e.g., Lionel Messi, LeBron James, Hidilyn Diaz)
-      </div>
+      <div class="value" id="brief"></div>
     </div>
-
     <div class="section">
       <div class="label">Focus</div>
-      <div class="value">Strong composition + action pose</div>
+      <div class="value" id="focus"></div>
     </div>
-
     <div class="section">
       <div class="label">Constraint</div>
-      <div class="value">Use only 2 colors + black</div>
+      <div class="value" id="constraint"></div>
     </div>
-
     <div class="section">
       <div class="label">Deliverable</div>
-      <div class="value">Portrait poster (A3)</div>
+      <div class="value" id="deliverable"></div>
     </div>
   </div>
 
-  <button class="primary full">Done → Next</button>
+  <button class="primary full" id="nextBtn">Done → Next</button>
 </div>
 
 <script>
-function toggleDetails(){
-  const d=document.getElementById("details");
-  d.style.display = d.style.display === "block" ? "none" : "block";
+/* DOM references — THIS WAS THE MISSING PART */
+const dayEl = document.querySelector(".day");
+const taskEl = document.querySelector(".task");
+const progressEl = document.querySelector(".progress");
+
+const briefEl = document.getElementById("brief");
+const focusEl = document.getElementById("focus");
+const constraintEl = document.getElementById("constraint");
+const deliverableEl = document.getElementById("deliverable");
+
+const details = document.getElementById("details");
+const nextBtn = document.getElementById("nextBtn");
+const backBtn = document.getElementById("backBtn");
+const detailsBtn = document.getElementById("detailsBtn");
+
+/* DATA */
+const briefs = [
+  {task:"Sports Icon Poster",brief:"Create a poster of a famous athlete (e.g., Lionel Messi, LeBron James, Hidilyn Diaz)",focus:"Strong composition + action pose",constraint:"Use only 2 colors + black",deliverable:"Portrait poster (A3)"},
+  {task:"Movie Quote Poster",brief:"Design a poster featuring a famous movie quote",focus:"Typography hierarchy",constraint:"No images allowed",deliverable:"Vertical poster"},
+  {task:"Song Lyric Poster",brief:"Create a poster using a powerful song lyric",focus:"Emotion through typography",constraint:"Text only",deliverable:"Square format"},
+  {task:"Film Poster Redesign",brief:"Redesign a classic movie poster",focus:"Conceptual thinking",constraint:"No actor faces",deliverable:"A3 poster"},
+  {task:"Sports Event Poster",brief:"Create a poster for a sports event",focus:"Visual hierarchy",constraint:"3 colors max",deliverable:"Event poster"},
+  {task:"Album Cover",brief:"Design an album cover for a real artist",focus:"Mood & symbolism",constraint:"Square format only",deliverable:"Album cover"},
+  {task:"Minimal Quote Poster",brief:"Design a minimal quote poster",focus:"Negative space",constraint:"Black & white only",deliverable:"Poster"},
+  {task:"Athlete Typography Poster",brief:"Poster using athlete name as main element",focus:"Creative typography",constraint:"No photos",deliverable:"A3 poster"},
+  {task:"Film Scene Poster",brief:"Poster inspired by a film scene",focus:"Storytelling",constraint:"Illustration only",deliverable:"Poster"},
+  {task:"Concert Poster",brief:"Design a concert poster",focus:"Information clarity",constraint:"2 fonts max",deliverable:"Vertical poster"},
+  {task:"Motivational Sports Quote",brief:"Poster with a sports quote",focus:"Type emphasis",constraint:"Text dominant",deliverable:"Poster"},
+  {task:"Classic Movie Remake",brief:"Modern remake of a classic film poster",focus:"Modern layout",constraint:"Flat design",deliverable:"Poster"},
+  {task:"Music Festival Poster",brief:"Design a music festival poster",focus:"Visual rhythm",constraint:"Bright colors",deliverable:"Poster"},
+  {task:"Athlete Silhouette Poster",brief:"Poster using athlete silhouette",focus:"Shape & contrast",constraint:"No details",deliverable:"Poster"},
+  {task:"Film Typography Poster",brief:"Typography-based film poster",focus:"Letter composition",constraint:"Text only",deliverable:"Poster"},
+  {task:"Sports Brand Ad",brief:"Ad poster for a sports brand",focus:"Brand consistency",constraint:"Brand colors only",deliverable:"Ad poster"},
+  {task:"Lyric Mood Poster",brief:"Poster that visualizes song mood",focus:"Emotion",constraint:"Abstract only",deliverable:"Poster"},
+  {task:"Movie Character Poster",brief:"Poster focused on one character",focus:"Character identity",constraint:"One subject",deliverable:"Poster"},
+  {task:"Match Day Poster",brief:"Poster for a match day",focus:"Energy",constraint:"Bold type",deliverable:"Poster"},
+  {task:"Album Typography Cover",brief:"Album cover using typography",focus:"Type creativity",constraint:"No images",deliverable:"Cover"},
+  {task:"Film Festival Poster",brief:"Poster for a film festival",focus:"Information hierarchy",constraint:"Grid layout",deliverable:"Poster"},
+  {task:"Sports Motivation Poster",brief:"Poster that motivates athletes",focus:"Impactful messaging",constraint:"Minimal text",deliverable:"Poster"},
+  {task:"Retro Movie Poster",brief:"Retro-style movie poster",focus:"Vintage look",constraint:"Retro palette",deliverable:"Poster"},
+  {task:"Lyric Illustration Poster",brief:"Illustrated lyric poster",focus:"Visual metaphor",constraint:"Hand-drawn style",deliverable:"Poster"},
+  {task:"Athlete Close-Up Poster",brief:"Close-up athlete poster",focus:"Emotion",constraint:"Monochrome",deliverable:"Poster"},
+  {task:"Indie Film Poster",brief:"Poster for an indie film",focus:"Concept over faces",constraint:"Symbolic",deliverable:"Poster"},
+  {task:"Sports Quote Typography",brief:"Typography sports quote poster",focus:"Type expression",constraint:"One font",deliverable:"Poster"},
+  {task:"Soundtrack Poster",brief:"Poster inspired by a film soundtrack",focus:"Mood",constraint:"Abstract",deliverable:"Poster"},
+  {task:"Final Portfolio Poster",brief:"Create your strongest poster concept",focus:"Personal style",constraint:"No limits",deliverable:"Portfolio piece"}
+];
+
+let current = Number(localStorage.getItem("gd-day")) || 0;
+
+/* Render */
+function render(){
+  const d = briefs[current];
+  dayEl.textContent = `DAY ${current + 1}`;
+  taskEl.textContent = d.task;
+
+  briefEl.textContent = d.brief;
+  focusEl.textContent = d.focus;
+  constraintEl.textContent = d.constraint;
+  deliverableEl.textContent = d.deliverable;
+
+  progressEl.style.width = `${(current / 29) * 100}%`;
 }
+
+/* Events */
+nextBtn.onclick = () => {
+  if(current < 29){
+    current++;
+    localStorage.setItem("gd-day", current);
+    render();
+  }
+};
+
+backBtn.onclick = () => {
+  if(current > 0){
+    current--;
+    localStorage.setItem("gd-day", current);
+    render();
+  }
+};
+
+detailsBtn.onclick = () => {
+  details.style.display = details.style.display === "block" ? "none" : "block";
+};
+
+render();
 </script>
 
 </body>
